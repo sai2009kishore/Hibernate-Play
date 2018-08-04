@@ -1,13 +1,2 @@
-/AcceptanceTest.class
-/IntegrationTest.class
-/META-INF/
-/TestSuite.class
 /UnitTest.class
-/application.conf
-/assets/
-/controllers/
-/logback.xml
 /models/
-/routes
-/services/
-/views/
