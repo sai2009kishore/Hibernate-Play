@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jpa.JPAPersonRepository;
+import jpa.PersonRepository;
 import models.Person;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -23,13 +23,13 @@ import play.mvc.Result;
  */
 public class PersonController extends Controller {
 
-    private final JPAPersonRepository jpaPersonRepository;
+    private final PersonRepository personRepository;
     private final HttpExecutionContext ec;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Inject
-    public PersonController(JPAPersonRepository jpaPersonRepository, HttpExecutionContext ec) {
-        this.jpaPersonRepository = jpaPersonRepository;
+    public PersonController(PersonRepository personRepository, HttpExecutionContext ec) {
+        this.personRepository = personRepository;
         this.ec = ec;
     }
 
@@ -39,13 +39,13 @@ public class PersonController extends Controller {
 
     public CompletionStage<Result> addPerson() throws JsonProcessingException {
     	Person person = mapper.treeToValue(request().body().asJson(), Person.class);
-        return jpaPersonRepository.add(person).thenApplyAsync(p -> {
+        return personRepository.add(person).thenApplyAsync(p -> {
             return redirect(routes.PersonController.index());
         }, ec.current());
     }
 
     public CompletionStage<Result> getPersons() {
-        return jpaPersonRepository.list().thenApplyAsync(personStream -> {
+        return personRepository.list().thenApplyAsync(personStream -> {
             return ok(toJson(personStream.collect(Collectors.toList())));
         }, ec.current());
     }

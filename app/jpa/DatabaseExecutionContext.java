@@ -1,10 +1,10 @@
 package jpa;
 
+import javax.inject.Inject;
+
 import akka.actor.ActorSystem;
 import scala.concurrent.ExecutionContext;
 import scala.concurrent.ExecutionContextExecutor;
-
-import javax.inject.Inject;
 
 /**
  * Custom execution context wired to "database.dispatcher" thread pool

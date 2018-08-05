@@ -15,7 +15,7 @@ import java.util.concurrent.ForkJoinPool;
 import org.junit.Test;
 
 import controllers.PersonController;
-import jpa.JPAPersonRepository;
+import jpa.PersonRepository;
 import models.Person;
 import play.api.mvc.Request;
 import play.core.j.JavaContextComponents;
@@ -45,7 +45,7 @@ public class UnitTest {
         JavaContextComponents contextComponents = createContextComponents();
         Http.Context.current.set(createJavaContext(tokenRequest.build()._underlyingRequest(), contextComponents));
 
-        JPAPersonRepository repository = mock(JPAPersonRepository.class);
+        PersonRepository repository = mock(PersonRepository.class);
         HttpExecutionContext ec = new HttpExecutionContext(ForkJoinPool.commonPool());
         final PersonController controller = new PersonController(repository, ec);
         final Result result = controller.index();
@@ -71,7 +71,7 @@ public class UnitTest {
     @Test
     public void checkAddPerson() {
         // Don't need to be this involved in setting up the mock, but for demo it works:
-        JPAPersonRepository repository = mock(JPAPersonRepository.class);
+        PersonRepository repository = mock(PersonRepository.class);
         Person person = new Person();
         person.setId(1);
         person.setName("Steve");
