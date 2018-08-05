@@ -1,9 +1,12 @@
-package models;
+package jpa;
 
 import play.db.jpa.JPAApi;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import models.Person;
+
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -14,7 +17,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 /**
  * Provide JPA operations running inside of a thread pool sized to the connection pool
  */
-public class JPAPersonRepository implements PersonRepository {
+public class JPAPersonRepository {
 
     private final JPAApi jpaApi;
     private final DatabaseExecutionContext executionContext;
@@ -25,12 +28,10 @@ public class JPAPersonRepository implements PersonRepository {
         this.executionContext = executionContext;
     }
 
-    @Override
     public CompletionStage<Person> add(Person person) {
         return supplyAsync(() -> wrap(em -> insert(em, person)), executionContext);
     }
 
-    @Override
     public CompletionStage<Stream<Person>> list() {
         return supplyAsync(() -> wrap(em -> list(em)), executionContext);
     }

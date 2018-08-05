@@ -1,4 +1,13 @@
-/models/
-/UnitTest.class
-/controllers/
 /META-INF/
+/application.conf
+/assets/
+/controllers/
+/logback.xml
+/models/
+/routes
+/views/
+/AcceptanceTest.class
+/IntegrationTest.class
+/TestSuite.class
+/UnitTest.class
+/jpa/

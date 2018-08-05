@@ -1,27 +1,6 @@
-import controllers.PersonController;
-import models.Person;
-import models.PersonRepository;
-import org.junit.Test;
-import play.api.mvc.Request;
-import play.core.j.JavaContextComponents;
-import play.core.j.JavaHelpers$;
-import play.data.FormFactory;
-import play.data.format.Formatters;
-import play.i18n.MessagesApi;
-import play.libs.Json;
-import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Http;
-import play.mvc.Result;
-import play.test.Helpers;
-import play.twirl.api.Content;
-
-import javax.validation.Validator;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ForkJoinPool;
-
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -29,6 +8,24 @@ import static org.mockito.Mockito.when;
 import static play.mvc.Http.Status.OK;
 import static play.mvc.Http.Status.SEE_OTHER;
 import static play.test.Helpers.contentAsString;
+
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ForkJoinPool;
+
+import org.junit.Test;
+
+import controllers.PersonController;
+import jpa.JPAPersonRepository;
+import models.Person;
+import play.api.mvc.Request;
+import play.core.j.JavaContextComponents;
+import play.core.j.JavaHelpers$;
+import play.libs.Json;
+import play.libs.concurrent.HttpExecutionContext;
+import play.mvc.Http;
+import play.mvc.Result;
+import play.test.Helpers;
+import play.twirl.api.Content;
 
 /**
  * Simple (JUnit) tests that can call all parts of a play app.
@@ -48,10 +45,9 @@ public class UnitTest {
         JavaContextComponents contextComponents = createContextComponents();
         Http.Context.current.set(createJavaContext(tokenRequest.build()._underlyingRequest(), contextComponents));
 
-        PersonRepository repository = mock(PersonRepository.class);
-        FormFactory formFactory = mock(FormFactory.class);
+        JPAPersonRepository repository = mock(JPAPersonRepository.class);
         HttpExecutionContext ec = new HttpExecutionContext(ForkJoinPool.commonPool());
-        final PersonController controller = new PersonController(formFactory, repository, ec);
+        final PersonController controller = new PersonController(repository, ec);
         final Result result = controller.index();
 
         assertThat(result.status()).isEqualTo(OK);
@@ -74,16 +70,11 @@ public class UnitTest {
 
     @Test
     public void checkAddPerson() {
-        // Easier to mock out the form factory inputs here
-        MessagesApi messagesApi = mock(MessagesApi.class);
-        Validator validator = mock(Validator.class);
-        FormFactory formFactory = new FormFactory(messagesApi, new Formatters(messagesApi), validator);
-
         // Don't need to be this involved in setting up the mock, but for demo it works:
-        PersonRepository repository = mock(PersonRepository.class);
+        JPAPersonRepository repository = mock(JPAPersonRepository.class);
         Person person = new Person();
-        person.id = 1L;
-        person.name = "Steve";
+        person.setId(1);
+        person.setName("Steve");
         when(repository.add(any())).thenReturn(supplyAsync(() -> person));
 
         // Set up the request builder to reflect input
@@ -96,7 +87,7 @@ public class UnitTest {
             HttpExecutionContext ec = new HttpExecutionContext(ForkJoinPool.commonPool());
 
             // Create controller and call method under test:
-            final PersonController controller = new PersonController(formFactory, repository, ec);
+            final PersonController controller = new PersonController(repository, ec);
             return controller.addPerson();
         });
 

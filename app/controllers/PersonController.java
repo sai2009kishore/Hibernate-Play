@@ -1,17 +1,20 @@
 package controllers;
 
-import models.Person;
-import models.PersonRepository;
-import play.data.FormFactory;
-import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
-import play.mvc.Result;
+import static play.libs.Json.toJson;
 
-import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
-import static play.libs.Json.toJson;
+import javax.inject.Inject;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jpa.JPAPersonRepository;
+import models.Person;
+import play.libs.concurrent.HttpExecutionContext;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 /**
  * The controller keeps all database operations behind the repository, and uses
@@ -20,14 +23,13 @@ import static play.libs.Json.toJson;
  */
 public class PersonController extends Controller {
 
-    private final FormFactory formFactory;
-    private final PersonRepository personRepository;
+    private final JPAPersonRepository jpaPersonRepository;
     private final HttpExecutionContext ec;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Inject
-    public PersonController(FormFactory formFactory, PersonRepository personRepository, HttpExecutionContext ec) {
-        this.formFactory = formFactory;
-        this.personRepository = personRepository;
+    public PersonController(JPAPersonRepository jpaPersonRepository, HttpExecutionContext ec) {
+        this.jpaPersonRepository = jpaPersonRepository;
         this.ec = ec;
     }
 
@@ -35,15 +37,15 @@ public class PersonController extends Controller {
         return ok(views.html.index.render());
     }
 
-    public CompletionStage<Result> addPerson() {
-        Person person = formFactory.form(Person.class).bindFromRequest().get();
-        return personRepository.add(person).thenApplyAsync(p -> {
+    public CompletionStage<Result> addPerson() throws JsonProcessingException {
+    	Person person = mapper.treeToValue(request().body().asJson(), Person.class);
+        return jpaPersonRepository.add(person).thenApplyAsync(p -> {
             return redirect(routes.PersonController.index());
         }, ec.current());
     }
 
     public CompletionStage<Result> getPersons() {
-        return personRepository.list().thenApplyAsync(personStream -> {
+        return jpaPersonRepository.list().thenApplyAsync(personStream -> {
             return ok(toJson(personStream.collect(Collectors.toList())));
         }, ec.current());
     }
