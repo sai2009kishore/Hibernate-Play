@@ -1,10 +1,11 @@
-package jpa;
+package repositories;
 
 import javax.inject.Named;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import jpa.DatabaseExecutionContext;
 import models.Person;
 import play.db.jpa.JPAApi;
 

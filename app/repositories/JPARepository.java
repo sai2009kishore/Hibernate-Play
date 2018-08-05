@@ -1,4 +1,4 @@
-package jpa;
+package repositories;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import jpa.DatabaseExecutionContext;
 import play.db.jpa.JPAApi;
 
 /**

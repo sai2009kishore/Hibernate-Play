@@ -1,3 +1,5 @@
 /controllers/
 /jpa/
 /services/
+/repositories/
+/CityService/

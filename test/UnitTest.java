@@ -15,7 +15,6 @@ import java.util.concurrent.ForkJoinPool;
 import org.junit.Test;
 
 import controllers.PersonController;
-import jpa.PersonRepository;
 import models.Person;
 import play.api.mvc.Request;
 import play.core.j.JavaContextComponents;
@@ -26,6 +25,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.test.Helpers;
 import play.twirl.api.Content;
+import repositories.PersonRepository;
 import services.PersonService;
 
 /**

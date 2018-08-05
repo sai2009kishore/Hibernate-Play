@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 
-import jpa.PersonRepository;
 import models.Person;
+import repositories.PersonRepository;
 
 public class PersonService {
 

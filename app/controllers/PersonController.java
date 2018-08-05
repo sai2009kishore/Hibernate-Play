@@ -11,11 +11,11 @@ import javax.inject.Inject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jpa.PersonRepository;
 import models.Person;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
+import repositories.PersonRepository;
 import services.PersonService;
 
 /**
