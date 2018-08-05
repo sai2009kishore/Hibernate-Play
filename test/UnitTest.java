@@ -26,6 +26,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.test.Helpers;
 import play.twirl.api.Content;
+import services.PersonService;
 
 /**
  * Simple (JUnit) tests that can call all parts of a play app.
@@ -46,8 +47,9 @@ public class UnitTest {
         Http.Context.current.set(createJavaContext(tokenRequest.build()._underlyingRequest(), contextComponents));
 
         PersonRepository repository = mock(PersonRepository.class);
+        PersonService personService = mock(PersonService.class);
         HttpExecutionContext ec = new HttpExecutionContext(ForkJoinPool.commonPool());
-        final PersonController controller = new PersonController(repository, ec);
+        final PersonController controller = new PersonController(personService, repository, ec);
         final Result result = controller.index();
 
         assertThat(result.status()).isEqualTo(OK);
@@ -72,6 +74,7 @@ public class UnitTest {
     public void checkAddPerson() {
         // Don't need to be this involved in setting up the mock, but for demo it works:
         PersonRepository repository = mock(PersonRepository.class);
+        PersonService personService = mock(PersonService.class);
         Person person = new Person();
         person.setId(1);
         person.setName("Steve");
@@ -87,7 +90,7 @@ public class UnitTest {
             HttpExecutionContext ec = new HttpExecutionContext(ForkJoinPool.commonPool());
 
             // Create controller and call method under test:
-            final PersonController controller = new PersonController(repository, ec);
+            final PersonController controller = new PersonController(personService, repository, ec);
             return controller.addPerson();
         });
 

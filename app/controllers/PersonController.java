@@ -4,6 +4,7 @@ import static play.libs.Json.toJson;
 
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,7 @@ import models.Person;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.PersonService;
 
 /**
  * The controller keeps all database operations behind the repository, and uses
@@ -25,11 +27,13 @@ public class PersonController extends Controller {
 
     private final PersonRepository personRepository;
     private final HttpExecutionContext ec;
+    private final PersonService personService;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Inject
-    public PersonController(PersonRepository personRepository, HttpExecutionContext ec) {
+    public PersonController(PersonService personService, PersonRepository personRepository, HttpExecutionContext ec) {
         this.personRepository = personRepository;
+        this.personService = personService;
         this.ec = ec;
     }
 
@@ -45,7 +49,8 @@ public class PersonController extends Controller {
     }
 
     public CompletionStage<Result> getPersons() {
-        return personRepository.list().thenApplyAsync(personStream -> {
+    	CompletionStage<Stream<Person>> stream = personService.list();
+        return stream.thenApplyAsync(personStream -> {
             return ok(toJson(personStream.collect(Collectors.toList())));
         }, ec.current());
     }

@@ -36,7 +36,7 @@ public class JPARepository<T> {
         return supplyAsync(() -> wrap(em -> list(em)), executionContext);
     }
 
-    private <T> T wrap(Function<EntityManager, T> function) {
+    private <X> X wrap(Function<EntityManager, X> function) {
         return jpaApi.withTransaction(function);
     }
 
