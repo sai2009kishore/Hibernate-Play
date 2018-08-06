@@ -6,6 +6,7 @@
 GET     /                           controllers.PersonController.index()
 POST    /person                     controllers.PersonController.addPerson()
 GET     /persons                    controllers.PersonController.getPersons()
+GET     /person/:id                 controllers.PersonController.getPersonById(id : Int)
 
 POST    /city                     	controllers.CityController.addCity()
 GET		/cities						controllers.CityController.getCities()

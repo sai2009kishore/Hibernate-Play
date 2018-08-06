@@ -3,8 +3,6 @@ package controllers;
 import static play.libs.Json.toJson;
 
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -12,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.City;
+import play.db.jpa.Transactional;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -39,15 +38,13 @@ public class CityController extends Controller {
 	public CompletionStage<Result> addCity() throws JsonProcessingException {
 		City city = mapper.treeToValue(request().body().asJson(), City.class);
 		return cityRepository.add(city).thenApplyAsync(p -> {
-			return redirect(routes.PersonController.index());
-		}, ec.current());
+			return ok("City Added Successuflly");
+		}, ec.current()).exceptionally(e -> badRequest(e.getMessage()));
 	}
 
-	public CompletionStage<Result> getCities() {
-		CompletionStage<Stream<City>> stream = cityService.list();
-		return stream.thenApplyAsync(cityStream -> {
-			return ok(toJson(cityStream.collect(Collectors.toList())));
-		}, ec.current());
-	}
+    @Transactional
+    public Result getCities() {
+    	return ok(toJson(cityService.list()));
+    }
 
 }

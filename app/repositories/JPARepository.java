@@ -5,10 +5,12 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import jpa.DatabaseExecutionContext;
 import play.db.jpa.JPAApi;
@@ -33,10 +35,6 @@ public class JPARepository<T> {
         return supplyAsync(() -> wrap(em -> insert(em, t)), executionContext);
     }
 
-    public CompletionStage<Stream<T>> list() {
-        return supplyAsync(() -> wrap(em -> list(em)), executionContext);
-    }
-
     private <X> X wrap(Function<EntityManager, X> function) {
         return jpaApi.withTransaction(function);
     }
@@ -46,8 +44,21 @@ public class JPARepository<T> {
         return t;
     }
 
-    private Stream<T> list(EntityManager em) {
-        List<T> list = em.createQuery("select p from " + tClass.getName() + " p", tClass).getResultList();
-        return list.stream();
+    public EntityManager em() {
+    	return jpaApi.em();
     }
+    
+    public List<T> list(Integer id) {
+    	CriteriaBuilder criteriaBuilder = em().getCriteriaBuilder();
+    	CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(tClass);
+    	Root<T> root = criteriaQuery.from(tClass);
+    	
+    	if(id != null) {
+    		criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
+    	}
+    	
+    	CriteriaQuery<T> query = criteriaQuery.select(root);
+    	return em().createQuery(query).getResultList();
+    }
+    
 }

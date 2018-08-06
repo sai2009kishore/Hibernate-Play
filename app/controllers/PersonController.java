@@ -3,8 +3,6 @@ package controllers;
 import static play.libs.Json.toJson;
 
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -12,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.Person;
+import play.db.jpa.Transactional;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -44,15 +43,17 @@ public class PersonController extends Controller {
     public CompletionStage<Result> addPerson() throws JsonProcessingException {
     	Person person = mapper.treeToValue(request().body().asJson(), Person.class);
         return personRepository.add(person).thenApplyAsync(p -> {
-            return redirect(routes.PersonController.index());
-        }, ec.current());
+            return ok("Person Added Successfully");
+        }, ec.current()).exceptionally(e -> badRequest(e.getMessage()));
     }
 
-    public CompletionStage<Result> getPersons() {
-    	CompletionStage<Stream<Person>> stream = personService.list();
-        return stream.thenApplyAsync(personStream -> {
-            return ok(toJson(personStream.collect(Collectors.toList())));
-        }, ec.current());
+    @Transactional
+    public Result getPersons() {
+    	return ok(toJson(personService.list(null)));
     }
 
+    @Transactional
+    public Result getPersonById(Integer id) {
+    	return ok(toJson(personService.list(id)));
+    }
 }

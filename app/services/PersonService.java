@@ -1,7 +1,6 @@
 package services;
 
-import java.util.concurrent.CompletionStage;
-import java.util.stream.Stream;
+import java.util.List;
 
 import com.google.inject.Inject;
 
@@ -16,8 +15,8 @@ public class PersonService {
 	public PersonService(PersonRepository personRepository) {
 		this.personRepository = personRepository;
 	}
-	public CompletionStage<Stream<Person>> list() {
-		return personRepository.list();
+	public List<Person> list(Integer id) {
+		return personRepository.list(id);
 	}
 
 }

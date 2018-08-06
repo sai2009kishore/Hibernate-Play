@@ -1,7 +1,6 @@
 package services;
 
-import java.util.concurrent.CompletionStage;
-import java.util.stream.Stream;
+import java.util.List;
 
 import com.google.inject.Inject;
 
@@ -16,7 +15,7 @@ public class CityService {
 	public CityService(CityRepository cityRepository) {
 		this.cityRepository = cityRepository;
 	}
-	public CompletionStage<Stream<City>> list() {
-		return cityRepository.list();
+	public List<City> list() {
+		return cityRepository.list(null);
 	}
 }
