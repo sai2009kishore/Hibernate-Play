@@ -18,36 +18,36 @@ import play.mvc.Result;
 import repositories.CityRepository;
 import services.CityService;
 
-public class CityController  extends Controller {
+public class CityController extends Controller {
 
-    private final CityRepository cityRepository;
-    private final HttpExecutionContext ec;
-    private final CityService cityService;
-    private final ObjectMapper mapper = new ObjectMapper();
+	private final CityRepository cityRepository;
+	private final HttpExecutionContext ec;
+	private final CityService cityService;
+	private final ObjectMapper mapper = new ObjectMapper();
 
-    @Inject
-    public CityController(CityService cityService, CityRepository cityRepository, HttpExecutionContext ec) {
-        this.cityRepository = cityRepository;
-        this.cityService = cityService;
-        this.ec = ec;
-    }
+	@Inject
+	public CityController(CityService cityService, CityRepository cityRepository, HttpExecutionContext ec) {
+		this.cityRepository = cityRepository;
+		this.cityService = cityService;
+		this.ec = ec;
+	}
 
-    public Result index() {
-        return ok(views.html.index.render());
-    }
+	public Result index() {
+		return ok(views.html.index.render());
+	}
 
-    public CompletionStage<Result> addCity() throws JsonProcessingException {
-    	City city = mapper.treeToValue(request().body().asJson(), City.class);
-        return cityRepository.add(city).thenApplyAsync(p -> {
-            return redirect(routes.PersonController.index());
-        }, ec.current());
-    }
+	public CompletionStage<Result> addCity() throws JsonProcessingException {
+		City city = mapper.treeToValue(request().body().asJson(), City.class);
+		return cityRepository.add(city).thenApplyAsync(p -> {
+			return redirect(routes.PersonController.index());
+		}, ec.current());
+	}
 
-    public CompletionStage<Result> getCities() {
-    	CompletionStage<Stream<City>> stream = cityService.list();
-        return stream.thenApplyAsync(cityStream -> {
-            return ok(toJson(cityStream.collect(Collectors.toList())));
-        }, ec.current());
-    }
+	public CompletionStage<Result> getCities() {
+		CompletionStage<Stream<City>> stream = cityService.list();
+		return stream.thenApplyAsync(cityStream -> {
+			return ok(toJson(cityStream.collect(Collectors.toList())));
+		}, ec.current());
+	}
 
 }

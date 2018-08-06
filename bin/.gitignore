@@ -1,5 +1,11 @@
+/META-INF/
+/application.conf
+/assets/
 /controllers/
 /jpa/
-/services/
+/logback.xml
+/models/
 /repositories/
-/CityService/
+/routes
+/services/
+/views/
