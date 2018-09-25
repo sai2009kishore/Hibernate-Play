@@ -1,50 +1,58 @@
 package controllers;
 
+import static constants.MessageConstants.DELETED_SUCCESSFULLY;
+import static constants.MessageConstants.NO_RECORDS_FOUND;
 import static play.libs.Json.toJson;
-
-import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.City;
 import play.db.jpa.Transactional;
-import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Result;
-import repositories.CityRepository;
 import services.CityService;
 
-public class CityController extends Controller {
+public class CityController extends BaseController<City> {
 
-	private final CityRepository cityRepository;
-	private final HttpExecutionContext ec;
 	private final CityService cityService;
-	private final ObjectMapper mapper = new ObjectMapper();
 
 	@Inject
-	public CityController(CityService cityService, CityRepository cityRepository, HttpExecutionContext ec) {
-		this.cityRepository = cityRepository;
+	public CityController(CityService cityService) {
+		super(City.class);
 		this.cityService = cityService;
-		this.ec = ec;
 	}
 
-	public Result index() {
-		return ok(views.html.index.render());
+	@Transactional
+	public Result addCity() throws JsonProcessingException {
+		City city = asJson(request().body().asJson());
+		try {
+			return ok(toJson(cityService.add(city)));
+		} catch (Exception e) {
+			return badRequest(ExceptionUtils.getRootCauseMessage(e));
+		}
 	}
 
-	public CompletionStage<Result> addCity() throws JsonProcessingException {
-		City city = mapper.treeToValue(request().body().asJson(), City.class);
-		return cityRepository.add(city).thenApplyAsync(p -> {
-			return ok("City Added Successuflly");
-		}, ec.current()).exceptionally(e -> badRequest(e.getMessage()));
+	@Transactional
+	public Result getCities() {
+		return ok(toJson(cityService.list(null)));
 	}
 
-    @Transactional
-    public Result getCities() {
-    	return ok(toJson(cityService.list()));
-    }
+	@Transactional
+	public Result getCityById(Integer id) {
+		return ok(toJson(cityService.list(id)));
+	}
+
+	@Transactional
+	public Result deleteCity(Integer id) {
+		int deleted = cityService.delete(id);
+		if (deleted > 0) {
+			return ok(toJson(DELETED_SUCCESSFULLY));
+		} else {
+			return badRequest(NO_RECORDS_FOUND);
+		}
+	}
 
 }

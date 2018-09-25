@@ -1,21 +1,17 @@
 package services;
 
-import java.util.List;
-
 import com.google.inject.Inject;
 
 import models.City;
 import repositories.CityRepository;
 
-public class CityService {
+public class CityService extends AbstractService<City> {
 
 	private final CityRepository cityRepository;
-	
+
 	@Inject
 	public CityService(CityRepository cityRepository) {
+		super(cityRepository);
 		this.cityRepository = cityRepository;
-	}
-	public List<City> list() {
-		return cityRepository.list(null);
 	}
 }

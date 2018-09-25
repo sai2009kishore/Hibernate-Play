@@ -2,14 +2,18 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
+# Persons
 GET     /                           controllers.PersonController.index()
-POST    /person                     controllers.PersonController.addPerson()
 GET     /persons                    controllers.PersonController.getPersons()
-GET     /person/:id                 controllers.PersonController.getPersonById(id : Int)
+GET     /persons/:id                controllers.PersonController.getPersonById(id : Int)
+POST    /persons                    controllers.PersonController.addPerson()
+DELETE  /persons/:id				controllers.PersonController.deletePerson(id: Int)
 
-POST    /city                     	controllers.CityController.addCity()
+# Cities
 GET		/cities						controllers.CityController.getCities()
+GET     /cities/:id                 controllers.CityController.getCityById(id : Int)
+POST    /cities               		controllers.CityController.addCity()
+DELETE  /cities/:id					controllers.CityController.deleteCity(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

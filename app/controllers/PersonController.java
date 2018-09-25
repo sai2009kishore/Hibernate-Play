@@ -1,59 +1,67 @@
 package controllers;
 
+import static constants.MessageConstants.DELETED_SUCCESSFULLY;
+import static constants.MessageConstants.NO_RECORDS_FOUND;
 import static play.libs.Json.toJson;
-
-import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import models.Person;
 import play.db.jpa.Transactional;
-import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Result;
-import repositories.PersonRepository;
 import services.PersonService;
 
 /**
  * The controller keeps all database operations behind the repository, and uses
  * {@link play.libs.concurrent.HttpExecutionContext} to provide access to the
- * {@link play.mvc.Http.Context} methods like {@code request()} and {@code flash()}.
+ * {@link play.mvc.Http.Context} methods like {@code request()} and
+ * {@code flash()}.
  */
-public class PersonController extends Controller {
+public class PersonController extends BaseController<Person> {
 
-    private final PersonRepository personRepository;
-    private final HttpExecutionContext ec;
-    private final PersonService personService;
-    private final ObjectMapper mapper = new ObjectMapper();
+	private final PersonService personService;
 
-    @Inject
-    public PersonController(PersonService personService, PersonRepository personRepository, HttpExecutionContext ec) {
-        this.personRepository = personRepository;
-        this.personService = personService;
-        this.ec = ec;
-    }
+	@Inject
+	public PersonController(PersonService personService) {
+		super(Person.class);
+		this.personService = personService;
+	}
 
-    public Result index() {
-        return ok(views.html.index.render());
-    }
+	public Result index() {
+		return ok(views.html.index.render());
+	}
 
-    public CompletionStage<Result> addPerson() throws JsonProcessingException {
-    	Person person = mapper.treeToValue(request().body().asJson(), Person.class);
-        return personRepository.add(person).thenApplyAsync(p -> {
-            return ok("Person Added Successfully");
-        }, ec.current()).exceptionally(e -> badRequest(e.getMessage()));
-    }
+	@Transactional
+	public Result addPerson() throws JsonProcessingException {
+		try {
+			Person person = asJson(request().body().asJson());
+			return ok(toJson(personService.add(person)));
+		} catch(Exception e) {
+			return badRequest(ExceptionUtils.getRootCauseMessage(e));
+		}
+	}
 
-    @Transactional
-    public Result getPersons() {
-    	return ok(toJson(personService.list(null)));
-    }
+	@Transactional
+	public Result getPersons() {
+		return ok(toJson(personService.list(null)));
+	}
 
-    @Transactional
-    public Result getPersonById(Integer id) {
-    	return ok(toJson(personService.list(id)));
-    }
+	@Transactional
+	public Result getPersonById(Integer id) {
+		return ok(toJson(personService.list(id)));
+	}
+
+	@Transactional
+	public Result deletePerson(Integer id) {
+		int deleted = personService.delete(id);
+		if (deleted > 0) {
+			return ok(toJson(DELETED_SUCCESSFULLY));
+		} else {
+			return badRequest(NO_RECORDS_FOUND);
+		}
+	}
 }
