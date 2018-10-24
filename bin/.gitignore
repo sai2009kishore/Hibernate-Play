@@ -1,0 +1,12 @@
+/META-INF/
+/application.conf
+/assets/
+/constants/
+/controllers/
+/logback.xml
+/models/
+/repositories/
+/routes
+/services/
+/views/
+/.gitignore

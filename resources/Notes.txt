@@ -1,0 +1,8 @@
+- Connection Pool Size indicated no.of parallel connections.
+- The dialect in Hibernate specifies the language used to communicate with the Database.
+- show_sql prints all the queries.
+- hbm2ddl.auto specifies whether create, validate or update the table based on the Model at the start-up.
+- @Basic specifies Hibernate that the configuration is default.
+- Natural key has business significance. Surrogate key is only used to distinguish columns.
+- Embedded and Embeddable for Objects
+- 
