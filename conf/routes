@@ -2,6 +2,9 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Initialize
+GET		/initialize					controllers.DBInitializerController.init(drop: Boolean)
+
 # Persons
 GET     /                           controllers.PersonController.index()
 GET     /persons                    controllers.PersonController.getPersons()
