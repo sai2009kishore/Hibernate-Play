@@ -4,3 +4,7 @@
 /jobs/
 /routes
 /.gitignore
+/models/
+/META-INF/
+/controllers/
+/repositories/

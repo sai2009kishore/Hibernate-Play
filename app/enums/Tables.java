@@ -1,7 +1,9 @@
 package enums;
 
 public enum Tables {
-	PERSON("person");
+	PERSON("person"),
+
+	VEHICLE("vehicle");
 
 	private final String name;
 

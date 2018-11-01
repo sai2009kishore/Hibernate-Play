@@ -4,5 +4,7 @@
 - hbm2ddl.auto specifies whether create, validate or update the table based on the Model at the start-up.
 - @Basic specifies Hibernate that the configuration is default.
 - Natural key has business significance. Surrogate key is only used to distinguish columns.
-- Embedded and Embeddable for Objects
-- 
+- Embedded and Embeddable for Objects.
+- @AttributeOverride is used to change the name of the columns used with @Embedded
+- If a list of Objects are specified using @ElementCollection, foreign keys are employed.
+- @Enumerated is used to persist a value of Enum in DB.

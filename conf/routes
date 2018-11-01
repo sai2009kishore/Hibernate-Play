@@ -12,5 +12,11 @@ GET     /persons/:id                controllers.PersonController.getPersonById(i
 POST    /persons                    controllers.PersonController.addPerson()
 DELETE  /persons/:id				controllers.PersonController.deletePerson(id: Int)
 
+# Vehicles
+GET     /vehicles                   controllers.VehicleController.getVehicles()
+GET     /vehicles/:id               controllers.VehicleController.getVehicleById(id : Int)
+POST    /vehicles                   controllers.VehicleController.addVehicle()
+DELETE  /vehicles/:id				controllers.VehicleController.deleteVehicle(id: Int)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

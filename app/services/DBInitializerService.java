@@ -4,7 +4,6 @@ import static constants.MessageConstants.CREATED_DATA_SUCCESSFULLY;
 import static constants.MessageConstants.DROPPED_AND_CREATED_DATA_SUCCESSFULLY;
 import static constants.MessageConstants.ERROR_CREATING_TABLES;
 import static constants.MessageConstants.RESOURCE_NOT_FOUND;
-import static constants.MessageConstants.TABLE_ALREADY_EXISTS;
 import static constants.MessageConstants.TABLE_DOES_NOT_EXIST;
 import static constants.MiscellaneousConstants.INITIALIZE_SCRIPT;
 import static constants.MiscellaneousConstants.NEW_LINE;
@@ -52,20 +51,20 @@ public class DBInitializerService {
 			Logger.error(ERROR_CREATING_TABLES);
 		}
 		try {
-			executeQuery(fileData.toString());
+			for (String query : fileData.toString().replaceAll("\n", "").split(";")) {
+				executeQuery(query);
+			}
 		} catch (Exception e) {
-			return TABLE_ALREADY_EXISTS;
+			return ERROR_CREATING_TABLES;
 		}
 		return drop ? DROPPED_AND_CREATED_DATA_SUCCESSFULLY : CREATED_DATA_SUCCESSFULLY;
 	}
 
 	private void dropTables() throws Exception {
-		StringBuffer query = new StringBuffer();
-		for (Tables table : Tables.values()) {
-			query.append("DROP TABLE " + table.getName() + ";" + NEW_LINE);
-		}
 		try {
-			executeQuery(query.toString());
+			for (Tables table : Tables.values()) {
+				executeQuery("DROP TABLE " + table.getName() + ";");
+			}
 		} catch (Exception e) {
 			throw e;
 		}

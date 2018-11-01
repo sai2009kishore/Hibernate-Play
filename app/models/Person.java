@@ -1,11 +1,15 @@
 package models;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,7 +26,12 @@ public class Person {
 	private int age;
 
 	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "pinCode", column = @Column(name = "zip_code")) })
 	private Address address;
+
+	@ManyToOne
+	@JoinColumn
+	private Vehicle vehicle;
 
 	public int getId() {
 		return id;
@@ -56,5 +65,12 @@ public class Person {
 		this.address = address;
 	}
 
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}
 
 }

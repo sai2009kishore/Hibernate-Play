@@ -17,7 +17,5 @@ public class MessageConstants {
 
 	public static final String ERROR_CREATING_TABLES = "Error creating tables";
 
-	public static final String TABLE_ALREADY_EXISTS = "Table Already Exists";
-
 	public static final String TABLE_DOES_NOT_EXIST = "Table Doesn't Exist";
 }
