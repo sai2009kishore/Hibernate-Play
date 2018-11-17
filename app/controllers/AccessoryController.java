@@ -10,10 +10,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import models.Person;
+import models.Accessory;
 import play.db.jpa.Transactional;
 import play.mvc.Result;
-import services.PersonService;
+import services.AccessoryService;
 
 /**
  * The controller keeps all database operations behind the repository, and uses
@@ -21,39 +21,39 @@ import services.PersonService;
  * {@link play.mvc.Http.Context} methods like {@code request()} and
  * {@code flash()}.
  */
-public class PersonController extends BaseController<Person> {
+public class AccessoryController extends BaseController<Accessory> {
 
-	private final PersonService personService;
+	private final AccessoryService accessoryService;
 
 	@Inject
-	public PersonController(PersonService personService) {
-		super(Person.class);
-		this.personService = personService;
+	public AccessoryController(AccessoryService accessoryService) {
+		super(Accessory.class);
+		this.accessoryService = accessoryService;
 	}
 
 	@Transactional
-	public Result addPerson() throws JsonProcessingException {
+	public Result addAccessory() throws JsonProcessingException {
 		try {
-			Person person = asJson(request().body().asJson());
-			return ok(toJson(personService.add(person)));
-		} catch(Exception e) {
+			Accessory accessory = asJson(request().body().asJson());
+			return ok(toJson(accessoryService.add(accessory)));
+		} catch (Exception e) {
 			return badRequest(ExceptionUtils.getRootCauseMessage(e));
 		}
 	}
 
 	@Transactional
-	public Result getPersons() {
-		return ok(toJson(personService.list(null)));
+	public Result getAccessories() {
+		return ok(toJson(accessoryService.list(null)));
 	}
 
 	@Transactional
-	public Result getPersonById(Integer id) {
-		return ok(toJson(personService.list(id)));
+	public Result getAccessoryById(Integer id) {
+		return ok(toJson(accessoryService.list(id)));
 	}
 
 	@Transactional
-	public Result deletePerson(Integer id) {
-		int deleted = personService.delete(id);
+	public Result deleteAccessory(Integer id) {
+		int deleted = accessoryService.delete(id);
 		if (deleted > 0) {
 			return ok(toJson(DELETED_SUCCESSFULLY));
 		} else {

@@ -2,11 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+GET     /                           controllers.Application.index()
+
 # Initialize
 GET		/initialize					controllers.DBInitializerController.init(drop: Boolean)
 
 # Persons
-GET     /                           controllers.PersonController.index()
 GET     /persons                    controllers.PersonController.getPersons()
 GET     /persons/:id                controllers.PersonController.getPersonById(id : Int)
 POST    /persons                    controllers.PersonController.addPerson()
@@ -17,6 +18,12 @@ GET     /vehicles                   controllers.VehicleController.getVehicles()
 GET     /vehicles/:id               controllers.VehicleController.getVehicleById(id : Int)
 POST    /vehicles                   controllers.VehicleController.addVehicle()
 DELETE  /vehicles/:id				controllers.VehicleController.deleteVehicle(id: Int)
+
+# Accessories
+GET     /accessories				controllers.AccessoryController.getAccessories()
+GET     /accessories/:id			controllers.AccessoryController.getAccessoryById(id : Int)
+POST    /accessories               	controllers.AccessoryController.addAccessory()
+DELETE  /accessories/:id			controllers.AccessoryController.deleteAccessory(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -8,3 +8,11 @@
 - @AttributeOverride is used to change the name of the columns used with @Embedded
 - If a list of Objects are specified using @ElementCollection, foreign keys are employed.
 - @Enumerated is used to persist a value of Enum in DB.
+- FetchType LAZY fetches the data as per requirement.
+- @ElementCollection is used to define a Collection of objects in an Entity (Used for associations)
+- For @ManyToMany relation, an intermediate table is used to maintain the ids of two tables.
+  mappedBy is used to specify the variable that is used to map in other table.
+- Cascade is used to perform operations automatically on dependent tables.
+- Inheritance is supported while persisting the data.
+- @Inheritance has SINGLE_TABLE strategy, i.e One table is used for all the classes in hierarchy.
+  In TABLE_PER_CLASS strategy, each class has a single table in the DB.
