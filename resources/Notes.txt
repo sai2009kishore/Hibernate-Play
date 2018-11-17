@@ -16,3 +16,20 @@
 - Inheritance is supported while persisting the data.
 - @Inheritance has SINGLE_TABLE strategy, i.e One table is used for all the classes in hierarchy.
   In TABLE_PER_CLASS strategy, each class has a single table in the DB.
+  In JOINED strategy, each class has a different table, but child class will have parent class id instead of data.
+   A join is performed to get the whole data.
+- When there is an object with ID already set, hibernate assumes that we are using an object that was retrieved from the DB
+   and throws an exception stating that the Object maybe detached.
+- When we create an object, it is in Transient state, i.e. it is still not saved until we use save().
+  When we save the object, it is persistent i.e. saved to the DB.
+  When we perform a read operation, the object is still in persistent state because it is still in the DB.
+  When we close the session, the object is detached i.e. though we have the object with data, it is detached from the DB
+   and any operation will not be reflected.
+- We can detach an object, modify it and then use it again to update.
+  But this is not expected, as the object may not be in sync with the DB.
+  So selectBeforeUpdate flag is used to fetch the data and update that data rather than having detached object's data.
+- Parameter binding can be used to remove SQL injections.
+- Named Queries can be written in classes and can be executed in the DB.
+- Hibernate has First level cache i.e. the default cache level that doesn't execute duplicate queries.
+- Cache can be configured i.e. second level cache wherein we can choose which Entity's data can be cached.
+- Query cache is used to enable cache at HQL or native query level.

@@ -4,27 +4,22 @@ import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "person")
-public class Person {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+@NamedQuery(name = "Person.fetchAll", query = "from Person")
+public class Person extends BaseEntity {
 
 	@Column(nullable = false)
 	private String name;
@@ -35,23 +30,15 @@ public class Person {
 	@AttributeOverrides({ @AttributeOverride(name = "pinCode", column = @Column(name = "zip_code")) })
 	private Address address;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.REMOVE)
 	@JoinColumn
 	@ElementCollection
 	private List<Vehicle> vehicles;
 
-	@ManyToMany
-	@JoinTable(name = "Person_Accessory", joinColumns = { @JoinColumn(name = "person_id") }, inverseJoinColumns = {
+	@ManyToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name = "person_accessory", joinColumns = { @JoinColumn(name = "person_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "accessory_id") })
 	private List<Accessory> accessories;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

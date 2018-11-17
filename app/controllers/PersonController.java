@@ -21,13 +21,13 @@ import services.PersonService;
  * {@link play.mvc.Http.Context} methods like {@code request()} and
  * {@code flash()}.
  */
-public class PersonController extends BaseController<Person> {
+public class PersonController extends AbstractController<Person> {
 
 	private final PersonService personService;
 
 	@Inject
 	public PersonController(PersonService personService) {
-		super(Person.class);
+		super(personService, Person.class);
 		this.personService = personService;
 	}
 
@@ -36,7 +36,7 @@ public class PersonController extends BaseController<Person> {
 		try {
 			Person person = asJson(request().body().asJson());
 			return ok(toJson(personService.add(person)));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return badRequest(ExceptionUtils.getRootCauseMessage(e));
 		}
 	}
@@ -49,6 +49,11 @@ public class PersonController extends BaseController<Person> {
 	@Transactional
 	public Result getPersonById(Integer id) {
 		return ok(toJson(personService.list(id)));
+	}
+
+	@Transactional
+	public Result updatePerson(Integer id) {
+		return ok(toJson(personService.update(id)));
 	}
 
 	@Transactional

@@ -15,13 +15,13 @@ import play.db.jpa.Transactional;
 import play.mvc.Result;
 import services.VehicleService;
 
-public class VehicleController extends BaseController<Vehicle> {
+public class VehicleController extends AbstractController<Vehicle> {
 
 	private final VehicleService vehicleService;
 
 	@Inject
 	public VehicleController(VehicleService vehicleService) {
-		super(Vehicle.class);
+		super(vehicleService, Vehicle.class);
 		this.vehicleService = vehicleService;
 	}
 

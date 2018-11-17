@@ -20,8 +20,16 @@ public abstract class AbstractService<T> {
 		return repository.list(id);
 	}
 
+	public T update(Integer id) {
+		return repository.update(id);
+	}
+
 	public T add(T t) throws Exception {
 		return repository.add(t);
+	}
+
+	public Object executeNamedQuery(String name) {
+		return repository.executeNamedQuery(name);
 	}
 
 }

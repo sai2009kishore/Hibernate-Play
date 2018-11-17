@@ -6,11 +6,13 @@ GET     /                           controllers.Application.index()
 
 # Initialize
 GET		/initialize					controllers.DBInitializerController.init(drop: Boolean)
+GET		/executeQuery/:name			controllers.PersonController.executeNamedQuery(name: String)
 
 # Persons
 GET     /persons                    controllers.PersonController.getPersons()
 GET     /persons/:id                controllers.PersonController.getPersonById(id : Int)
 POST    /persons                    controllers.PersonController.addPerson()
+PATCH	/persons/:id				controllers.PersonController.updatePerson(id: Int)
 DELETE  /persons/:id				controllers.PersonController.deletePerson(id: Int)
 
 # Vehicles

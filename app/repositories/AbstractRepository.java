@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,7 +12,6 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import play.db.jpa.JPAApi;
-
 
 public class AbstractRepository<T> {
 
@@ -47,6 +47,15 @@ public class AbstractRepository<T> {
 		return em().createQuery(query).getResultList();
 	}
 
+	public T findById(Integer id) {
+		return em().find(tClass, id);
+	}
+
+	public T update(Integer id) {
+		T t = findById(id);
+		return t;
+	}
+
 	public int delete(Integer id) {
 		CriteriaBuilder criteriaBuilder = em().getCriteriaBuilder();
 		CriteriaDelete<T> criteriaQuery = criteriaBuilder.createCriteriaDelete(tClass);
@@ -55,4 +64,10 @@ public class AbstractRepository<T> {
 
 		return em().createQuery(criteriaQuery).executeUpdate();
 	}
+
+	public List<T> executeNamedQuery(String name) {
+		Query query = em().createNamedQuery("Person.fetchAll");
+		return query.getResultList();
+	}
+
 }

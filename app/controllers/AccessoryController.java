@@ -21,13 +21,13 @@ import services.AccessoryService;
  * {@link play.mvc.Http.Context} methods like {@code request()} and
  * {@code flash()}.
  */
-public class AccessoryController extends BaseController<Accessory> {
+public class AccessoryController extends AbstractController<Accessory> {
 
 	private final AccessoryService accessoryService;
 
 	@Inject
 	public AccessoryController(AccessoryService accessoryService) {
-		super(Accessory.class);
+		super(accessoryService, Accessory.class);
 		this.accessoryService = accessoryService;
 	}
 
