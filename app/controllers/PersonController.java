@@ -43,7 +43,7 @@ public class PersonController extends AbstractController<Person> {
 
 	@Transactional
 	public Result getPersons() {
-		return ok(toJson(personService.list(null)));
+		return ok(toJson(personService.list(null, request().queryString())));
 	}
 
 	@Transactional

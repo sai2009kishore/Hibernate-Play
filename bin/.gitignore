@@ -3,6 +3,7 @@
 /assets/
 /constants/
 /controllers/
+/dto/
 /enums/
 /jobs/
 /logback.xml
@@ -11,4 +12,3 @@
 /routes
 /services/
 /views/
-/dto/

@@ -1,6 +1,7 @@
 package repositories;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -32,6 +33,22 @@ public class AbstractRepository<T> {
 
 	public EntityManager em() {
 		return jpaApi.em();
+	}
+
+	public List<T> list(Integer id, Map<String, String[]> params) {
+		CriteriaBuilder criteriaBuilder = em().getCriteriaBuilder();
+		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(tClass);
+		Root<T> root = criteriaQuery.from(tClass);
+
+		if (id != null) {
+			criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
+		}
+
+		if (params.containsKey("name")) {
+			criteriaQuery.where(criteriaBuilder.like(root.get("name"), "%" + params.get("name")[0].toString() + "%"));
+		}
+		CriteriaQuery<T> query = criteriaQuery.select(root);
+		return em().createQuery(query).getResultList();
 	}
 
 	public List<T> list(Integer id) {

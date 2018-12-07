@@ -1,6 +1,7 @@
 package services;
 
 import java.util.List;
+import java.util.Map;
 
 import repositories.AbstractRepository;
 
@@ -14,6 +15,10 @@ public abstract class AbstractService<T> {
 
 	public int delete(Integer id) {
 		return repository.delete(id);
+	}
+
+	public List<T> list(Integer id, Map<String, String[]> params) {
+		return repository.list(id, params);
 	}
 
 	public List<T> list(Integer id) {
